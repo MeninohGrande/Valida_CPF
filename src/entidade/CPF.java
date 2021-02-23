@@ -1,46 +1,43 @@
 package entidade;
 
 public class CPF {
-		private String nCPF;						//Variavel para armazenar CPF
-		private int X[] = new int[11];				//CPF in int array
-		private int Xt[] = new int [2];				//digitos verificadores temp
+		private Integer X[] = new Integer[11];				//CPF in int array
 		char[] CPFArray;
 
 		public CPF (String cpf) {
-			this.nCPF = cpf;
-			CPFArray = nCPF.toCharArray();
+			CPFArray = formatCPF(cpf).toCharArray();
 		}
 	
-		public CPF (Integer cpf) {
-			this.nCPF = Integer.toString(cpf);
-			CPFArray = nCPF.toCharArray();			
-		}
-		
-		public String getnCPF() {
-			return nCPF;
+		public String getCPF() {
+			String cpf =  String.valueOf(CPFArray);
+				
+			return cpf;
 		}
 
-		public void setnCPF(String cpf) {
-			this.nCPF = cpf;
-			CPFArray = nCPF.toCharArray();
+		public void setCPF(String cpf) {
+			
+			CPFArray = formatCPF(cpf).toCharArray();
+			splitCPF();
+			
 		}
 
 		public Boolean validar() {
 			int soma = 0;
+			
 			quebrar();
 			
-			if (! check())
+			if (check())
 				return false;
 		
 			
 			for (int i=0; i < 9; i++)			
 				soma += X[i] * (10-i);
 			
-					if ((soma%11) == 0 || (soma%11) == 1 ) {
-						Xt[0] = 0;
+					if (11 - (soma%11) > 9 ) {
+						X[9] = 0;
 					}
 					else {
-						Xt[0] = 11 - (soma%11);
+						X[9] = 11 - (soma%11);
 					}
 					
 			soma = 0;
@@ -48,22 +45,40 @@ public class CPF {
 			for (int j=0; j < 10; j++)
 				soma += X[j] * (11-j);
 			
-					if ((soma%11) == 0 || (soma%11) == 1 )
-						Xt[1] = 0;
+					if ( 11 - (soma%11) > 9 )
+						X[10] = 0;
 					else
-						Xt[1] = 11 - (soma%11);
+						X[10] = 11 - (soma%11);
 						
 			soma = 0;
-					
-			if ( (X[9] == Xt[0]) && (X[10] == Xt[1]))
+			
+		int dig1 = Integer.parseInt(String.valueOf(CPFArray[9]));
+		int dig2 = Integer.parseInt(String.valueOf(CPFArray[10]));
+		
+			if ( (X[9] == dig1) && (X[10] == dig2) ) {
 				return true;
-			else {
+			}else {
 				return false;
 			}
 		}
 		
-		public int[] dividir() {
-			quebrar();
+		public int digVer() {
+			
+			if (X[9] != null && X[10] != null) {
+				
+				return X[10] + (10 * X[9]);
+			}
+			else {
+				return -1;
+			}
+			
+		}
+		
+		public Integer[] splitCPF() {
+
+			for (int i = 0; i < CPFArray.length; i++) {
+				X[i] = Integer.valueOf(String.valueOf(CPFArray[i]));
+			}
 		return X;
 		}
 		
@@ -112,7 +127,7 @@ public class CPF {
 			break;
 			
 			default: 
-				estado = "Invalido";
+				estado = "Inválido";
 			break;
 			}
 		return estado;
@@ -120,33 +135,28 @@ public class CPF {
 		
 		private void quebrar() {
 			
-			for (int i = 0; i < CPFArray.length; i++) {
+			for (int i = 0; i < 9; i++) {
 				X[i] = Integer.valueOf(String.valueOf(CPFArray[i]));
 			}
 		}
 		
+		private String formatCPF (String cpf) {
+			cpf = cpf.replace(".", "");
+			cpf = cpf.replace("-", "");
+			return cpf;
+		}
 		private boolean check() {
-			if (nCPF.length() != 11 || nCPF == null || nCPF.contains("01234567890") || nCPF.contains("00000000000") ||
+			String nCPF = String.valueOf(CPFArray);
+	
+			if (CPFArray.length != 11 || nCPF == null || nCPF.contains("01234567890") || nCPF.contains("00000000000") ||
 				nCPF.contains("11111111111") || nCPF.contains("22222222222") || nCPF.contains("33333333333") ||
 				nCPF.contains("44444444444") || nCPF.contains("55555555555") || nCPF.contains("66666666666") ||
 				nCPF.contains("77777777777") || nCPF.contains("88888888888") || nCPF.contains("99999999999")) 
 			{
-				return false;
+				return true;
 			} 
 			else {
-				return true;
+				return false;
 			}
-		}
-		
-		private void imprimir (int X[]) {
-			for(int i = 0; i < X.length; i++) {
-				System.out.print("  ");
-				System.out.print(X[i]);
-				}
-			
-			System.out.println();
-			
-			for(int c=0 ; c < Xt.length ; c ++)
-				System.out.println("Digito verificador  = "+ Xt[c]);
 		}
 }
