@@ -9,11 +9,10 @@ public class Program {
 	public static void main(String[] args) {
 		Scanner sc = new Scanner(System.in);
 		
-		System.out.print("Entre com o CPF a ser verificado: ");
+		CPF c = new CPF("");
 		
+		c.autoComplete();
 		
-		
-		CPF c = new CPF("066.651.753-32");
 		valida(c);
 		
 	sc.close();
@@ -22,10 +21,7 @@ public class Program {
 	private static void valida(CPF c) {
 		if ( c.validar() ) {
 			System.out.println("CPF valido");
-
-			System.out.print(c.getCPF());
-
-			System.out.println(" --  Pertece a região de " + c.estado());
+			System.out.println("Pertece a região de " + c.estado());
 			System.out.println("Dig ver: " + c.digVer());
 		}else {
 			System.out.println("CPF falso");

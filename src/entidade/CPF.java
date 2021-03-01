@@ -1,25 +1,32 @@
 package entidade;
 
+import java.util.Random;
+
 public class CPF {
 		private Integer X[] = new Integer[11];				//CPF in int array
 		char[] CPFArray;
 
 		public CPF (String cpf) {
-			CPFArray = formatCPF(cpf).toCharArray();
+			
+			CPFArray = formatCPF(cpf).toCharArray();		
+		}
+	public void setCPF(String cpf) {
+			
+				CPFArray = formatCPF(cpf).toCharArray();
+				splitCPF();
 		}
 	
 		public String getCPF() {
-			String cpf =  String.valueOf(CPFArray);
-				
-			return cpf;
+			
+			if (CPFArray.length > 0) {
+				String cpf =  String.valueOf(CPFArray);
+				return cpf;
+			}else {
+				return "CPF NULL";
+			}
 		}
 
-		public void setCPF(String cpf) {
-			
-			CPFArray = formatCPF(cpf).toCharArray();
-			splitCPF();
-			
-		}
+	
 
 		public Boolean validar() {
 			int soma = 0;
@@ -58,28 +65,35 @@ public class CPF {
 			if ( (X[9] == dig1) && (X[10] == dig2) ) {
 				return true;
 			}else {
+				CPFArray[9] = String.valueOf(X[9]).charAt(0);
+				CPFArray[10] = String.valueOf(X[10]).charAt(0);
 				return false;
 			}
 		}
 		
-		public int digVer() {
+		public String digVer() {
 			
 			if (X[9] != null && X[10] != null) {
-				
-				return X[10] + (10 * X[9]);
+				String 	dig = String.valueOf(X[9]);
+						dig += String.valueOf(X[10]);
+			return dig;
 			}
 			else {
-				return -1;
+				return "VOID";
 			}
 			
 		}
 		
 		public Integer[] splitCPF() {
-
+			if(X == null) {
 			for (int i = 0; i < CPFArray.length; i++) {
 				X[i] = Integer.valueOf(String.valueOf(CPFArray[i]));
 			}
 		return X;
+		}
+			else {
+				return X;
+			}
 		}
 		
 		public String estado() {
@@ -133,6 +147,30 @@ public class CPF {
 		return estado;
 		}
 		
+		
+		public void autoComplete() {
+		Random random = new Random();
+				if (!check()) {
+			
+					char[] tempCPF = new char[11];
+					
+					for (int temp = 0; temp < CPFArray.length; temp++) {
+						tempCPF[temp] = CPFArray[temp];
+					}
+	
+					for (int c = 0; c < 11; c++) {
+						if (tempCPF[c] == '\u0000') {
+							tempCPF[c] = String.valueOf(random.nextInt(10)).charAt(0);
+						}
+					}
+					
+					CPFArray = String.valueOf(tempCPF).toCharArray();
+					
+					validar();		
+				}else
+					System.out.println("Entrada de CPF invalida");
+		}
+		
 		private void quebrar() {
 			
 			for (int i = 0; i < 9; i++) {
@@ -148,15 +186,15 @@ public class CPF {
 		private boolean check() {
 			String nCPF = String.valueOf(CPFArray);
 	
-			if (CPFArray.length != 11 || nCPF == null || nCPF.contains("01234567890") || nCPF.contains("00000000000") ||
-				nCPF.contains("11111111111") || nCPF.contains("22222222222") || nCPF.contains("33333333333") ||
-				nCPF.contains("44444444444") || nCPF.contains("55555555555") || nCPF.contains("66666666666") ||
-				nCPF.contains("77777777777") || nCPF.contains("88888888888") || nCPF.contains("99999999999")) 
+			if (CPFArray.length > 11 || nCPF == null || nCPF.contains("01234567890") || nCPF.contains("000000") ||
+				nCPF.contains("111111") || nCPF.contains("222222") || nCPF.contains("333333") ||
+				nCPF.contains("444444") || nCPF.contains("555555") || nCPF.contains("666666") ||
+				nCPF.contains("777777") || nCPF.contains("888888") || nCPF.contains("999999")) 
 			{
 				return true;
 			} 
 			else {
 				return false;
 			}
-		}
+		}	
 }
